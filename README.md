@@ -6,6 +6,7 @@
 - 前端：Vue3、Vite、Naive UI、Vue-Router
 - Markdown 渲染：marked + highlight.js + KaTeX
 - 桌面容器：Wails（Go + Web 前端）
+- GO框架：GoFrame
 
 ##
 ### 功能概览
