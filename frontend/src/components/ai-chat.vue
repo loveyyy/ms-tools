@@ -1,8 +1,8 @@
 <!--
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2025-03-22 21:30:22
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2025-03-23 13:35:01
+ * @LastEditors: Morningsun 1049935747@qq.com
+ * @LastEditTime: 2025-09-11 16:59:09
  * @Description:
 -->
 <template>
@@ -121,8 +121,8 @@ onMounted(() => {
 
 function initOpenAI() {
   const config = {
-    apiKey: 'n_vRmBy_-cgpKEpxP20vGZ6UxYDDAjYRgofH6nH-JxA',
-    baseURL: 'http://47.100.251.26:9881/v1',
+    apiKey: '',
+    baseURL: '',
     dangerouslyAllowBrowser: true
   }
   openai.value = new OpenAI(config)
