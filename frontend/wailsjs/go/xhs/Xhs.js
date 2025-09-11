@@ -6,6 +6,10 @@ export function GetData(arg1, arg2) {
   return window['go']['xhs']['Xhs']['GetData'](arg1, arg2);
 }
 
+export function Init(arg1) {
+  return window['go']['xhs']['Xhs']['Init'](arg1);
+}
+
 export function IsLoginSession() {
   return window['go']['xhs']['Xhs']['IsLoginSession']();
 }

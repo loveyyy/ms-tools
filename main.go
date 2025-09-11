@@ -29,10 +29,9 @@ var assets embed.FS
 var icon []byte
 
 func main() {
-	// Create an instance of the app structure
-	app := backend.NewApp()
 	xhs := xhs2.NewXhs()
 	dy := dy2.NewDy()
+	app := backend.NewApp(xhs, dy)
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:             "ms-tools",

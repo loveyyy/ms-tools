@@ -9,25 +9,37 @@ package backend
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/frame/g"
+	"ms-tools/backend/dy"
 	"ms-tools/backend/http"
+	"ms-tools/backend/utils"
+	"ms-tools/backend/xhs"
 )
 
 // App struct
 type App struct {
-	ctx context.Context
+	ctx  context.Context
+	xhs1 *xhs.Xhs
+	dy1  *dy.Dy
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
+func NewApp(xhs1 *xhs.Xhs, dy1 *dy.Dy) *App {
+	return &App{
+		xhs1: xhs1,
+		dy1:  dy1,
+	}
 }
 
 // startup is called at application startup
 func (a *App) Startup(ctx context.Context) {
+	g.Log().Infof(ctx, "ms-tools isRunning version is %v , main dir is %v", g.Cfg().MustGet(ctx, "appVersion", "unknow"), utils.GetRootPath())
 	// Perform your setup here
 	a.ctx = ctx
 	// 启动 goframe 反向代理（xhs/dy 等媒体资源）
 	http.StartProxy()
+	go a.xhs1.Init(true)
+	go a.dy1.Init()
 }
 
 // domReady is called after front-end resources have been loaded

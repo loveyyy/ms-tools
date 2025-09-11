@@ -4,6 +4,8 @@ import {xhs} from '../models';
 
 export function GetData(arg1:xhs.XhsType,arg2:Record<string, any>):Promise<Record<string, any>>;
 
+export function Init(arg1:boolean):Promise<void>;
+
 export function IsLoginSession():Promise<string>;
 
 export function SetLoginSession(arg1:string):Promise<void>;

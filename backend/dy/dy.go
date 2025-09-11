@@ -23,7 +23,6 @@ type Dy struct {
 
 func NewDy() (dy *Dy) {
 	dy = &Dy{client: http.NewHttp("https://www.douyin.com/", "dy"), name: "dy"}
-	dy.init()
 	return
 }
 
@@ -377,7 +376,7 @@ func (dy *Dy) generateBogus() (string, error) {
 	return string(abougs), nil
 }
 
-func (dy *Dy) init() {
+func (dy *Dy) Init() {
 	//获取初始化ttwid
 	url1 := "https://www.douyin.com/jingxuan"
 	req, err := dy.client.GetNewRequest("GET", url1, nil)

@@ -5,4 +5,6 @@ export function HomeList(arg1:Record<string, any>):Promise<Record<string, any>>;
 
 export function HotList(arg1:Record<string, any>):Promise<Record<string, any>>;
 
+export function Init():Promise<void>;
+
 export function Search(arg1:string,arg2:Record<string, any>):Promise<Record<string, any>>;

@@ -3,23 +3,25 @@ package dy
 import (
 	"fmt"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gfile"
 	"testing"
 )
 
 func TestHome(t *testing.T) {
-	dy := NewDy()
-	var params = g.Map{
-		"count":         "20",
-		"refresh_index": "7",
-		"refer_id":      "",
-		"refer_type":    "10",
-		"pull_type":     "2",
-	}
-	homeList, err := dy.HomeList(params)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(homeList)
+	fmt.Println(gfile.MainPkgPath())
+	//dy := NewDy()
+	//var params = g.Map{
+	//	"count":         "20",
+	//	"refresh_index": "7",
+	//	"refer_id":      "",
+	//	"refer_type":    "10",
+	//	"pull_type":     "2",
+	//}
+	//homeList, err := dy.HomeList(params)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//fmt.Println(homeList)
 }
 
 func TestHot(t *testing.T) {

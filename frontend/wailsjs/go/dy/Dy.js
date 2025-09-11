@@ -10,6 +10,10 @@ export function HotList(arg1) {
   return window['go']['dy']['Dy']['HotList'](arg1);
 }
 
+export function Init() {
+  return window['go']['dy']['Dy']['Init']();
+}
+
 export function Search(arg1, arg2) {
   return window['go']['dy']['Dy']['Search'](arg1, arg2);
 }

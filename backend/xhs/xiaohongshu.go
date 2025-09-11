@@ -9,16 +9,18 @@ import (
 	"errors"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/gogf/gf/v2/os/gfile"
 	"log"
 	"math/big"
 	mrand "math/rand"
 	"ms-tools/backend/http"
+	"ms-tools/backend/utils"
 	"net/url"
-	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/gogf/gf/v2/container/gmap"
@@ -60,7 +62,6 @@ type BaseResponse struct {
 func NewXhs() (xhs *Xhs) {
 	xhs = &Xhs{client: http.NewHttp("https://www.xiaohongshu.com/", "xhs"), name: "xhs", signName: 0,
 		loginSession: ""}
-	xhs.init(true)
 	return
 }
 
@@ -219,12 +220,16 @@ func (x *Xhs) xsts1(path string, params string) *XSTruct {
 }
 
 func (x *Xhs) profileData() string {
-	directory, err := os.Getwd() // 获取当前工作目录
-	if err != nil {
-		x.log().Errorf(context.Background(), "os.Getwd() err:%v", err) // 打印错误信息
+	jsFilePath := utils.GetRootPath() + "/js/xhs/gid.js"
+	if !gfile.Exists(jsFilePath) {
+		x.log().Errorf(context.Background(), "xhs gid.js 文件不存在")
 		return ""
 	}
-	cmd := exec.Command("node", directory+"/backend/xhs/gid.js", x.client.GetCookiesStr("xhs"))
+	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr("xhs"))
+	// 设置SysProcAttr属性，实现静默执行
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		HideWindow: true,
+	}
 	output, err := cmd.Output()
 	if err != nil {
 		x.log().Errorf(context.Background(), "Command err %v", err.Error())
@@ -258,12 +263,16 @@ func (x *Xhs) xsCommon(e map[string]interface{}) string {
 	listMap.Set("x8", h)
 
 	jsonDataBytes, _ := json.Marshal(listMap)
-	directory, err := os.Getwd() // 获取当前工作目录
-	if err != nil {
-		x.log().Errorf(context.Background(), "os.Getwd() err:%v", err) // 打印错误信息
+	jsFilePath := utils.GetRootPath() + "/js/xhs/xscommon.js"
+	if !gfile.Exists(jsFilePath) {
+		x.log().Errorf(context.Background(), "xhs xscommon.js 文件不存在")
 		return ""
 	}
-	cmd := exec.Command("node", directory+"/backend/xhs/xscommon.js", string(jsonDataBytes), strconv.Itoa(x.signName+1))
+	cmd := exec.Command("node", jsFilePath, string(jsonDataBytes), strconv.Itoa(x.signName+1))
+	// 设置SysProcAttr属性，实现静默执行
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		HideWindow: true,
+	}
 	output, err := cmd.Output()
 	if err != nil {
 		x.log().Errorf(context.Background(), "Command err %v", err.Error())
@@ -275,13 +284,17 @@ func (x *Xhs) xsCommon(e map[string]interface{}) string {
 }
 
 func (x *Xhs) xTS(u string, params string) *XSTruct {
-	directory, err := os.Getwd() // 获取当前工作目录
-	if err != nil {
-		x.log().Errorf(context.Background(), "os.Getwd err：%v", err) // 打印错误信息
+	jsFilePath := utils.GetRootPath() + "/js/xhs/xs.js"
+	if !gfile.Exists(jsFilePath) {
+		x.log().Errorf(context.Background(), "xhs xs.js 文件不存在")
 		return nil
 	}
-	x.log().Infof(context.Background(), "XTS请求的URL为： %v,%v,%v,%v", u, params, directory, x.client.GetCookiesStr(x.name))
-	cmd := exec.Command("node", directory+"/backend/xhs/xs.js", x.client.GetCookiesStr(x.name), u, params)
+	x.log().Infof(context.Background(), "XTS请求的URL为： %v,%v,%v,%v", u, params, jsFilePath, x.client.GetCookiesStr(x.name))
+	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr(x.name), u, params)
+	// 设置SysProcAttr属性，实现静默执行
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		HideWindow: true,
+	}
 	output, err := cmd.Output()
 	if err != nil {
 		x.log().Errorf(context.Background(), "Command err %v", err.Error())
@@ -298,17 +311,21 @@ func (x *Xhs) xTS(u string, params string) *XSTruct {
 }
 
 func (x *Xhs) xTS1(u string, params string) *XSTruct {
-	directory, err := os.Getwd() // 获取当前工作目录
-	if err != nil {
-		x.log().Errorf(context.Background(), "os.Getwd err：%v", err) // 打印错误信息
+	jsFilePath := utils.GetRootPath() + "/js/xhs/xs1.js"
+	if !gfile.Exists(jsFilePath) {
+		x.log().Errorf(context.Background(), "xhs xs1.js 文件不存在")
 		return nil
 	}
-	x.log().Infof(context.Background(), "XTS请求的URL为： %v,%v,%v", u, params, directory)
+	x.log().Infof(context.Background(), "XTS请求的URL为： %v,%v,%v", u, params, jsFilePath)
 	var uParams = u + params
 	has := md5.Sum([]byte(uParams))
 	md5str := fmt.Sprintf("%x", has) //将[]byte转成16进制
 	log.Print(x.client.GetCookiesStr(x.name), uParams, md5str)
-	cmd := exec.Command("node", directory+"/backend/xhs/xs1.js", x.client.GetCookiesStr(x.name), uParams, md5str)
+	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr(x.name), uParams, md5str)
+	// 设置SysProcAttr属性，实现静默执行
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		HideWindow: true,
+	}
 	output, err := cmd.Output()
 	if err != nil {
 		x.log().Errorf(context.Background(), "Command err %v", err.Error())
@@ -324,7 +341,7 @@ func (x *Xhs) xTS1(u string, params string) *XSTruct {
 	return xs
 }
 
-func (x *Xhs) init(isInit bool) {
+func (x *Xhs) Init(isInit bool) {
 	if isInit {
 		x.Xsecappid = "xhs-pc-web"
 		x.client.AddCookies("xsecappid", x.Xsecappid)

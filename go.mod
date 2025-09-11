@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.10.3
 	github.com/gogf/gf/v2 v2.9.3
 	github.com/tjfoc/gmsm v1.4.1
-	github.com/wailsapp/wails/v2 v2.10.2
+	github.com/wailsapp/wails/v2 v2.10.1
 )
 
 require (

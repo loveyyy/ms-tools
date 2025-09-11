@@ -14,6 +14,8 @@
 
 ##
 ### 使用说明
+#### 运行环境
+- 需要将node环境加入环境变量中，小红书参数需要调用node执行。
 #### 运行/编译项目
 - wails dev/build。具体请参考:https://wails.io/docs/gettingstarted/running
 #### 关于小红书不登陆的局限性
