@@ -18,7 +18,7 @@
       <n-back-top :bottom="40" :visibility-height="200" :show="showBackTop" @click="scrollToTop">
       </n-back-top>
       <n-scrollbar ref="scrollbarRef" style="height: 100%; position: relative;" @scroll="onScroll"
-        v-if="xhsList && xhsList.length > 0">
+        v-if="xhsList">
         <n-spin size="small" stroke="#409eff" v-if="isRefresh" />
         <NoteGrid :list="xhsList" @selectNote="openDetail" @openUser="openUser" />
         <n-flex wrap align="center">
@@ -32,7 +32,7 @@
           </div>
         </n-flex>
       </n-scrollbar>
-      <div v-else style="height: 100%;align-items: center;display: flex;justify-content: center;">
+      <div v-else-if="!isRefresh" style="height: 100%;align-items: center;display: flex;justify-content: center;">
         <n-empty description="暂无数据">
           <template #extra>
             <n-button size="small" @click="refresh">
@@ -104,12 +104,12 @@ const detail = ref(null)
 function onScroll (e) {
   const target = e.target
   const distanceToBottom = target.scrollHeight - target.scrollTop - target.clientHeight
-  if (target.scrollTop <= 200) {
+  if (target.scrollTop <= 360) {
     showBackTop.value = false
   } else {
     showBackTop.value = true
   }
-  if (!loading.value && !noMore.value && distanceToBottom <= 200) {
+  if (!loading.value && !noMore.value && distanceToBottom <= 360) {
     handleLoad()
   }
 }

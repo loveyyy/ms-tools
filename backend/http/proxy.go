@@ -2,91 +2,68 @@
  * @Author: Morningsun 1049935747@qq.com
  * @Date: 2025-09-08 22:28:23
  * @LastEditors: Morningsun 1049935747@qq.com
- * @LastEditTime: 2025-09-08 23:17:23
+ * @LastEditTime: 2025-09-12 22:16:03
  * @Description:
  */
 package http
 
 import (
-	"io"
-	"net/http"
-	stdurl "net/url"
-
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"net/http"
+	"net/http/httputil"
+	stdurl "net/url"
 )
 
-// Constants for server configuration
-const (
-	// UpStream defines the backend server URL that the proxy will forward requests to
-	UpStream = "http://127.0.0.1:17892"
-)
+func MiddlewareCORS(r *ghttp.Request) {
+	r.Response.CORSDefault()
+	r.Middleware.Next()
+}
 
-// StartProxy 启动一个 goframe 反向代理服务
-// 访问示例：/proxy/{name}?u={encodedTarget}
-// name: xhs | dy | default，用于设置不同站点需要的请求头
 func StartProxy() {
-	s := g.Server("mediaProxy")
-
-	s.Group("").GET("/proxy/{name}", func(r *ghttp.Request) {
-		name := r.GetRouter("name").String()
-		raw := r.GetQuery("u").String()
-		if raw == "" {
-			r.Response.WriteStatus(http.StatusBadRequest, "missing u")
-			return
-		}
-		// 校验 URL
-		if _, err := stdurl.Parse(raw); err != nil {
-			r.Response.WriteStatus(http.StatusBadRequest, "bad url")
-			return
-		}
-
-		// 组装请求
-		req, err := http.NewRequest("GET", raw, nil)
-		if err != nil {
-			r.Response.WriteStatus(http.StatusInternalServerError, err.Error())
-			return
-		}
-
-		// 根据名称设置请求头
-		switch name {
-		case "xhs":
-			req.Header.Set("Referer", "https://www.xiaohongshu.com/")
-			req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0")
-			req.Header.Set("Accept", "*/*")
-			req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9")
-			req.Header.Set("Sec-Fetch-Dest", "document")
-		case "dy":
-			req.Header.Set("Referer", "https://www.douyin.com/")
-			req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0")
-			req.Header.Set("Accept", "*/*")
-			req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9")
-			req.Header.Set("Sec-Fetch-Dest", "document")
-		default:
-			req.Header.Set("Accept", "*/*")
-			req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9")
-			req.Header.Set("Sec-Fetch-Dest", "document")
-		}
-
-		resp, err := http.DefaultClient.Do(req)
-		if err != nil {
-			r.Response.WriteStatus(http.StatusBadGateway, err.Error())
-			return
-		}
-		defer resp.Body.Close()
-
-		// 透传响应头
-		if ct := resp.Header.Get("Content-Type"); ct != "" {
-			r.Response.Writer.Header().Set("Content-Type", ct)
-		}
-		if cl := resp.Header.Get("Content-Length"); cl != "" {
-			r.Response.Writer.Header().Set("Content-Length", cl)
-		}
-		r.Response.WriteHeader(resp.StatusCode)
-		_, _ = io.Copy(r.Response.Writer, resp.Body)
+	s := g.Server("proxy")
+	// Create a new reverse proxy instance
+	proxy := httputil.NewSingleHostReverseProxy(nil)
+	// Configure error handling for proxy failures
+	proxy.ErrorHandler = func(writer http.ResponseWriter, request *http.Request, e error) {
+		writer.WriteHeader(http.StatusBadGateway)
+	}
+	s.Use(MiddlewareCORS)
+	s.Group("/proxy", func(group *ghttp.RouterGroup) {
+		group.Middleware(MiddlewareCORS)
+		group.ALL("/{name}", func(r *ghttp.Request) {
+			var (
+				originalPath = r.Request.URL.Path
+				proxyToPath  = r.Get("u").String()
+				name         = r.GetRouter("name").String()
+			)
+			// Parse the upstream URL
+			u, _ := stdurl.Parse(proxyToPath)
+			proxy.Director = func(req *http.Request) {
+				req.URL.RawQuery = u.RawQuery
+				req.URL.Scheme = u.Scheme
+				req.URL.Host = u.Host
+				req.URL.Path = u.Path
+				req.URL.RawPath = u.RawPath
+				req.Host = u.Host
+			}
+			// Log the proxy operation
+			g.Log().Infof(r.Context(), `proxy:"%s" -> backend:"%s"`, originalPath, proxyToPath)
+			// 根据名称设置请求头
+			switch name {
+			case "xhs":
+				r.Request.Header.Set("Referer", "https://www.xiaohongshu.com/")
+			case "dy":
+				r.Request.Header.Set("Referer", "https://www.douyin.com/")
+			default:
+				r.Request.Header.Set("Accept", "*/*")
+			}
+			// Ensure request body can be read multiple times if needed
+			r.MakeBodyRepeatableRead(false)
+			// Forward the request to the backend server
+			proxy.ServeHTTP(r.Response.Writer, r.Request)
+		})
 	})
-
-	// 监听地址
-	s.SetAddr("127.0.0.1:17892")
-	go s.Start()
+	s.SetPort(17892)
+	s.Run()
 }

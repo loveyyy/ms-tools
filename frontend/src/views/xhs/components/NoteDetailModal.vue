@@ -1,21 +1,22 @@
 <template>
   <n-modal v-model:show="modelShow" :mask-closable="true" preset="card" style="width:80vw; height :80vh"
-           :title="detail?.note_card?.title || '内容详情'">
+    :title="detail?.note_card?.title || '内容详情'">
     <div v-if="detail" class="card-content">
       <div style="height: 100%; display: flex;max-width: 50%;">
         <div v-if="detail.note_card.type === 'video'"
-             style="width: 100%;height: 100%;flex: 1; background: #000; border-radius: 8px; overflow: hidden;">
+          style="width: 100%;height: 100%;flex: 1; background: #000; border-radius: 8px; overflow: hidden;">
           <video v-if="detail.note_card.type === 'video'"
-                 style="width: 100%; height: 100%; object-fit: fit; background: #000;" controls playsinline autoplay
-                 :src="proxyXhs(getVideoUrl(detail))" />
+            style="width: 100%; height: 100%; object-fit: fit; background: #000;" controls playsinline autoplay
+            :src="proxyXhs(getVideoUrl(detail))" />
         </div>
         <div v-else>
           <n-carousel autoplay :show-arrow="detail.note_card.image_list && detail.note_card.image_list.length > 1">
             <n-carousel-item v-for="(item, idx) in detail.note_card.image_list" :key="idx">
               <n-image height="100%" width="100%" fit="cover" style="border-radius: 10px;width: 100%;height: 100%;"
-                       :src="proxyXhs(item.url_default)" />
+                :src="proxyXhs(item.url_default)" />
             </n-carousel-item>
-            <template #arrow="{ prev, next }" v-if="detail.note_card.image_list && detail.note_card.image_list.length > 1">
+            <template #arrow="{ prev, next }"
+              v-if="detail.note_card.image_list && detail.note_card.image_list.length > 1">
               <div class="custom-arrow-left">
                 <n-icon @click="prev" size="30px" color="grey">
                   <ArrowBackCircle />
@@ -34,16 +35,19 @@
         <n-flex vertical style="height: 100%;width: 100%;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <n-image width="40px" height="40px" style="border-radius: 50%;width: 40px;"
-                     :src="detail.note_card.user.avatar" preview-disabled />
+              :src="detail.note_card.user.avatar" preview-disabled />
             <div style="display: flex;flex-direction: column;">
               <n-text style="text-align: start;">{{ detail.note_card.user.nickname }}</n-text>
               <n-text depth="3" style="font-size: 12px;">{{ formatTime(detail.note_card.time) }}</n-text>
             </div>
           </div>
           <n-scrollbar style="height: 100%;">
-            <div style="padding-right: 20px;font-weight: 400;font-size: 16px;" v-html="filterDesc(detail.note_card.desc)"></div>
+            <div style="padding-right: 20px;font-weight: 400;font-size: 16px;"
+              v-html="filterDesc(detail.note_card.desc)">
+            </div>
             <n-flex warap style="margin-top: 20px;">
-              <n-tag v-for="(item, index) in (detail.note_card.tag_list || [])" round size="small" type="primary" :key="index" :disabled="false">#{{ item.name }}</n-tag>
+              <n-tag v-for="(item, index) in (detail.note_card.tag_list || [])" round size="small" type="primary"
+                :key="index" :disabled="false">#{{ item.name }}</n-tag>
             </n-flex>
           </n-scrollbar>
           <n-space style="margin-top: auto;">
@@ -132,5 +136,3 @@ function proxyXhs (url) {
   padding: 0 20px;
 }
 </style>
-
-

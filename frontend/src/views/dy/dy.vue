@@ -14,7 +14,7 @@
             </n-flex>
             <n-back-top :bottom="40" :visibility-height="200" :show="showBackTop" @click="scrollToTop" />
             <n-scrollbar ref="scrollbarRef" style="height: 100%; position: relative;" @scroll="onScroll"
-                v-if="videoList && videoList.length > 0">
+                v-if="videoList">
                 <n-row :gutter="[12, 12]" style="width: 100%;">
                     <n-col :span="6" v-for="(item, index) in videoList" :key="item.aweme_id || index"
                         style="cursor: pointer;" @click="openPlayer(item)">
@@ -38,7 +38,7 @@
                     <div v-if="noMore" style="font-weight: bold;margin-top: 10px;width: 100%;">没有更多了 🤪</div>
                 </n-flex>
             </n-scrollbar>
-            <div v-else style="height: 100%;align-items: center;display: flex;justify-content: center;">
+            <div v-else-if="!loading" style="height: 100%;align-items: center;display: flex;justify-content: center;">
                 <n-empty description="暂无数据">
                     <template #extra>
                         <n-button size="small" @click="doSearch">刷新</n-button>
@@ -107,7 +107,7 @@ const currentVideo = ref(null)
 function onScroll (e) {
     const target = e.target
     const distanceToBottom = target.scrollHeight - target.scrollTop - target.clientHeight
-    showBackTop.value = target.scrollTop > 200
+    showBackTop.value = target.scrollTop > 250
     if (!loading.value && !noMore.value && distanceToBottom <= 250) {
         loadMore()
     }
@@ -141,7 +141,8 @@ function getHomeList () {
             digg_count: a.statistics?.digg_count || 0,
             play_url: a.video?.play_addr?.url_list?.[0],
             duration: a.video?.duration,
-            create_time: a.create_time,
+            create_time
+                : a.create_time,
         }))
         if (isLoadMore.value) {
             if (videoList.length === 0) {
@@ -162,7 +163,6 @@ function handleSelect (e) {
     keyword.value = e
     doSearch()
 }
-
 
 function doSearch () {
     router.push({

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -92,7 +91,6 @@ func (t *HttpClient) GetCookiesStr(from string) string {
 func (t *HttpClient) LoadCookieFromFile() (map[string]interface{}, error) {
 	var cookiesMap = make(map[string]interface{})
 	value := t.cookiesMap[t.name]
-	log.Printf(value)
 	if len(value) > 0 {
 		cookiesList := strings.Split(value, "; ")
 		for _, cookie := range cookiesList {
