@@ -13,7 +13,7 @@
           <n-carousel autoplay :show-arrow="detail.note_card.image_list && detail.note_card.image_list.length > 1">
             <n-carousel-item v-for="(item, idx) in detail.note_card.image_list" :key="idx">
               <n-image height="100%" width="100%" fit="cover" style="border-radius: 10px;width: 100%;height: 100%;"
-                :src="proxyXhs(item.url_default)" />
+                :src="item.url_default" />
             </n-carousel-item>
             <template #arrow="{ prev, next }"
               v-if="detail.note_card.image_list && detail.note_card.image_list.length > 1">

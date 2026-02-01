@@ -11,7 +11,7 @@
       style="cursor: pointer;">
       <div style="position: relative;">
         <n-image width="100%" height="360px" style="border-radius: 10px"
-          :src="proxyXhs(item.note_card.cover.url_default || item.note_card.cover.url)" object-fit="contain" preview-disabled />
+          :src="item.note_card.cover.url_default || item.note_card.cover.url" object-fit="contain" preview-disabled />
         <n-icon color="white" size="20px" style="position: absolute;right: 10px;top: 10px;"
           v-if="(item.note_card.type) === 'video'">
           <PlayCircleOutline />
@@ -22,7 +22,7 @@
       </n-ellipsis>
       <div style="display: flex;gap: 5px;align-items: center">
         <n-image width="20px" height="20px" style="border-radius: 10px;width: 20px;"
-          :src="proxyXhs(item.note_card.user.avatar)" preview-disabled @click.stop="() => emitOpenUser(item)" />
+          :src="item.note_card.user.avatar" preview-disabled @click.stop="() => emitOpenUser(item)" />
         <n-text @click.stop="() => emitOpenUser(item)" style="cursor: pointer;">{{ item.note_card.user.nick_name
         }}</n-text>
         <div style="margin-left: auto;font-size: 13px">{{ item.note_card.interact_info.liked_count }}</div>

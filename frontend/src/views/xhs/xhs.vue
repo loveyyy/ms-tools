@@ -237,10 +237,21 @@ function openUser (item) {
 onMounted(() => {
   GetData(1, {}).then((res => {
     let categorys = [
-      { "id": "homefeed_recommend", "name": "推荐" }
+      { "id": "homefeed_recommend", "name": "推荐" },
+      { "id": "homefeed.fashion_v3", "name": "穿搭" },
+      { "id": "homefeed.food_v3", "name": "美食" },
+      { "id": "homefeed.cosmetics_v3", "name": "彩妆" },
+      { "id": "homefeed.movie_and_tv_v3", "name": "影视" },
+      { "id": "homefeed.career_v3", "name": "职场" },
+      { "id": "homefeed.love_v3", "name": "影视" },
+      { "id": "homefeed.household_product_v3", "name": "家居" },
+      { "id": "homefeed.gaming_v3", "name": "游戏" },
+      { "id": "homefeed.travel_v3", "name": "旅行" },
+      { "id": "homefeed.fitness_v3", "name": "健身" },
     ]
+    console.log(res)
     if (res && res.categories) {
-      categorys = categorys.concat(res.categories)
+      categorys = res.categories
     }
     categoryList.value = categorys
   }))

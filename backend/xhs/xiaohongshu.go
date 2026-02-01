@@ -384,7 +384,7 @@ func (x *Xhs) GetData(xhsType XhsType, params g.Map) (g.Map, error) {
 	case SEARCH:
 		result, err = x.search(params)
 	case FEDD_INFO:
-		result, err = x.feedDetail(params, false)
+		result, err = x.feedDetail(params, true)
 	case USER_INFO:
 		result, err = x.userDetail(params)
 	case USER_FEED:
@@ -479,22 +479,42 @@ func (x *Xhs) getGID(profileData string) {
 
 // 获取分类和初始化cookies
 func (x *Xhs) home() (g.Map, error) {
-	result, err := x.client.SendRequest("GET", "https://www.xiaohongshu.com/explore", nil, x.name)
-	x.log().Infof(context.Background(), "https://www.xiaohongshu.com/explore   %v %v", nil, string(result))
-	//提取字符串中"channels":至,"isResourceDisplay"之间的字符串
-	var reg = regexp.MustCompile(`"channels":(.*?),"isResourceDisplay"`)
-	match := reg.FindStringSubmatch(string(result))
-	if len(match) > 1 {
-		homeInfo := match[1]
-		var homeInfoMap g.Map
-		err = json.Unmarshal([]byte(homeInfo), &homeInfoMap)
-		if err != nil {
-			x.log().Errorf(context.Background(), "json.Unmarshal err %v", err.Error())
-			return nil, err
-		}
-		return homeInfoMap, nil
+	request, err := x.client.GetNewRequest("GET", "https://www.xiaohongshu.com/explore", nil)
+	if err != nil {
+		x.log().Errorf(context.Background(), "userDetail GetNewRequest er %v", err.Error())
+		return nil, err
 	}
-	return nil, err
+	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
+	request.Header.Add("Referer", "https://www.xiaohongshu.com/explore")
+	request.Header.Add("Cookie", x.client.GetCookiesStr())
+	result, err := x.client.SendRequestByReq(request, x.name)
+	if err != nil {
+		x.log().Errorf(context.Background(), "userDetail Send 异常:%v", err)
+		return nil, err
+	}
+	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
+	request.Header.Add("Referer", "https://www.xiaohongshu.com/explore")
+	request.Header.Add("Cookie", x.client.GetCookiesStr())
+	x.log().Infof(context.Background(), "https://www.xiaohongshu.com/explore   %v %v", nil, string(result))
+	reader := strings.NewReader(string(result))
+	document, err := goquery.NewDocumentFromReader(reader)
+	if err != nil {
+		x.log().Errorf(context.Background(), "parse html error:%v", err)
+		return nil, err
+	}
+	homeInfoMap := g.Map{}
+	var categoryList []g.Map
+	document.Find(".content-container div").Each(func(i int, s *goquery.Selection) {
+		name, _ := s.Attr("id")
+		x.log().Infof(context.Background(), "id:%v,text:%v", name, s.Text())
+		categoryList = append(categoryList, g.Map{
+			"name": strings.TrimSpace(s.Text()),
+			"id":   name,
+		})
+	})
+	homeInfoMap["category"] = categoryList
+	x.log().Infof(context.Background(), "homeInfoMap:%v", homeInfoMap)
+	return homeInfoMap, err
 }
 
 func (x *Xhs) homeFeed(params1 g.Map, isV2 bool) (g.Map, error) {
