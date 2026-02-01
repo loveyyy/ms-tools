@@ -27,7 +27,7 @@
           <n-col :span="6" v-for="(item, index) in videoList" :key="item.aweme_id || index" style="cursor: pointer;"
             @click="openPlayer(item)">
             <div style="position: relative;">
-              <n-image width="100%" height="250px" style="border-radius: 10px" :src="proxy(item.cover)" preview-disabled
+              <n-image width="100%" height="250px" style="border-radius: 10px" :src="item.cover" preview-disabled
                 fit="cover" />
               <n-icon color="white" size="20px" style="position: absolute;right: 10px;top: 10px;">
                 <PlayCircleOutline />

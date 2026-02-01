@@ -38,7 +38,7 @@ func (a *App) Startup(ctx context.Context) {
 	a.ctx = ctx
 	// 启动 goframe 反向代理（xhs/dy 等媒体资源）
 	go http.StartProxy()
-	go a.xhs1.Init(true)
+	go a.xhs1.Init(false)
 	go a.dy1.Init()
 }
 

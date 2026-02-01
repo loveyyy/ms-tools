@@ -8,47 +8,48 @@ import (
 
 func TestHome(t *testing.T) {
 	x := NewXhs()
+	x.Init(false)
 	var params = g.Map{}
 	params["cursor_score"] = ""
-	params["num"] = 30
+	params["num"] = 18
 	params["refresh_type"] = 1
-	params["note_index"] = 0
+	params["note_index"] = 12
 	params["unread_begin_note_id"] = ""
 	params["unread_end_note_id"] = ""
 	params["category"] = "homefeed.fashion_v3"
 	params["search_key"] = ""
-	params["need_num"] = 15
+	params["need_num"] = 8
 	params["image_formats"] = []string{"jpg", "webp", "avif"}
 	params["need_filter_image"] = false
 	params["unread_note_count"] = 0
-	data, err := x.GetData(HOME_FEED, params)
+	data, err := x.GetData(HOME_FEED_V1, params)
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(data)
 
-	var items = data["items"].([]interface{})
-
-	fmt.Println(data["cursor_score"], len(items))
-
-	params = g.Map{}
-	params["cursor_score"] = data["cursor_score"]
-	params["num"] = 30
-	params["refresh_type"] = 3
-	params["note_index"] = len(items) + 1
-	params["unread_begin_note_id"] = ""
-	params["unread_end_note_id"] = ""
-	params["category"] = "homefeed.fashion_v3"
-	params["search_key"] = ""
-	params["need_num"] = 15
-	params["image_formats"] = []string{"jpg", "webp", "avif"}
-	params["need_filter_image"] = false
-	params["unread_note_count"] = 0
-	data, err = x.GetData(HOME_FEED, params)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(data)
+	//var items = data["items"].([]interface{})
+	//
+	//fmt.Println(data["cursor_score"], len(items))
+	//
+	//params = g.Map{}
+	//params["cursor_score"] = data["cursor_score"]
+	//params["num"] = 30
+	//params["refresh_type"] = 3
+	//params["note_index"] = len(items) + 1
+	//params["unread_begin_note_id"] = ""
+	//params["unread_end_note_id"] = ""
+	//params["category"] = "homefeed.fashion_v3"
+	//params["search_key"] = ""
+	//params["need_num"] = 15
+	//params["image_formats"] = []string{"jpg", "webp", "avif"}
+	//params["need_filter_image"] = false
+	//params["unread_note_count"] = 0
+	//data, err = x.GetData(HOME_FEED_V1, params)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//fmt.Println(data)
 
 }
 

@@ -1,7 +1,10 @@
 package http
 
 import (
+	"context"
 	"errors"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gfile"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -36,6 +39,7 @@ func (t *HttpClient) SendRequestByReq(req *http.Request, from string) ([]byte, e
 	if err != nil {
 		return nil, err
 	}
+	g.Log("http").Info(context.Background(), "SendRequestByReq response status", res.StatusCode)
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -72,25 +76,31 @@ func (t *HttpClient) AddCookies(key, value string) {
 	t.cookie.SetCookies(t.url, []*http.Cookie{{Name: key, Value: value}})
 }
 
-func (t *HttpClient) GetCookiesStr(from string) string {
+func (t *HttpClient) GetCookiesStr() string {
 	var cookiesStr1 = ""
 	for _, cookies := range t.GetCookies() {
-		if len(cookies.Value) > 0 && len(cookies.Name) > 0 {
-			if strings.EqualFold(from, "xhs") && (strings.EqualFold(cookies.Name, "web_session") || strings.EqualFold(cookies.Name, "acw_tc")) {
-				break
-			}
-			if strings.EqualFold(from, "dy") && !strings.EqualFold(cookies.Name, "ttwid") {
-				break
-			}
-			cookiesStr1 += cookies.Name + "=" + cookies.Value + "; "
-		}
+		cookiesStr1 += cookies.Name + "=" + cookies.Value + "; "
 	}
 	return cookiesStr1
 }
 
-func (t *HttpClient) LoadCookieFromFile() (map[string]interface{}, error) {
+func (t *HttpClient) LoadCookieFromFile(form string) (map[string]interface{}, error) {
 	var cookiesMap = make(map[string]interface{})
-	value := t.cookiesMap[t.name]
+	var value string
+
+	var cookeFileName = form + "_cookies" + ".txt"
+	if gfile.Exists(cookeFileName) {
+		err := gfile.ReadLines(cookeFileName, func(line string) error {
+			value = value + line
+			return nil
+		})
+		if err != nil {
+			g.Log("http").Errorf(context.Background(), "LoadCookieFromFile from: %v err:%v", form+"_cookies"+".txt", err.Error())
+			return cookiesMap, err
+		}
+	} else {
+		return nil, errors.New("no found cookies")
+	}
 	if len(value) > 0 {
 		cookiesList := strings.Split(value, "; ")
 		for _, cookie := range cookiesList {
@@ -105,6 +115,13 @@ func (t *HttpClient) LoadCookieFromFile() (map[string]interface{}, error) {
 	return nil, errors.New("no found cookies")
 }
 
-func (t *HttpClient) SaveCookieToFile(from string) {
-	t.cookiesMap[t.name] = t.GetCookiesStr(from)
+func (t *HttpClient) SaveCookieToFile(form string) {
+	file, err := gfile.Create(form + "_cookies" + ".txt")
+	if err != nil {
+		g.Log("http").Error(context.Background(), "Create file tool_cookies.json err", err)
+		return
+	}
+	defer file.Close()
+	_, _ = file.WriteString(t.GetCookiesStr())
+	g.Log("http").Info(context.Background(), "SaveCookieToFile to ", file.Name())
 }

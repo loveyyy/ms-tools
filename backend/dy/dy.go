@@ -391,7 +391,7 @@ func (dy *Dy) Init() {
 		dy.log().Errorf(context.Background(), "init ttwid  err %v", err.Error())
 		return
 	}
-	dy.log().Infof(context.Background(), "init ttwid success %v", dy.client.GetCookiesStr(dy.name))
+	dy.log().Infof(context.Background(), "init ttwid success %v", dy.client.GetCookiesStr())
 	//active ttwid
 	url1 = "https://www.douyin.com/ttwid/check/"
 	data := g.Map{
@@ -410,13 +410,13 @@ func (dy *Dy) Init() {
 	}
 	req.Header.Add("Referer", "https://www.douyin.com/")
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
-	req.Header.Add("Cookie", dy.client.GetCookiesStr(dy.name))
+	req.Header.Add("Cookie", dy.client.GetCookiesStr())
 	_, err = dy.client.SendRequestByReq(req, dy.name)
 	if err != nil {
 		dy.log().Errorf(context.Background(), "active ttwid  err %v", err.Error())
 		return
 	}
-	dy.log().Infof(context.Background(), "active ttwid success %v", dy.client.GetCookiesStr(dy.name))
+	dy.log().Infof(context.Background(), "active ttwid success %v", dy.client.GetCookiesStr())
 }
 
 func (dy *Dy) HomeList(params g.Map) (g.Map, error) {
@@ -428,7 +428,7 @@ func (dy *Dy) HomeList(params g.Map) (g.Map, error) {
 	}
 	req.Header.Add("Referer", "https://www.douyin.com/jingxuan")
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
-	req.Header.Add("Cookie", dy.client.GetCookiesStr(dy.name))
+	req.Header.Add("Cookie", dy.client.GetCookiesStr())
 	req.Form = make(url.Values)
 	if len(params) > 0 {
 		for s, v := range params {
@@ -472,7 +472,7 @@ func (dy *Dy) HotList(params g.Map) (g.Map, error) {
 	}
 	req.Header.Add("Referer", "https://www.douyin.com/")
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
-	req.Header.Add("Cookie", dy.client.GetCookiesStr(dy.name))
+	req.Header.Add("Cookie", dy.client.GetCookiesStr())
 
 	response, err := dy.client.SendRequestByReq(req, dy.name)
 	if err != nil {
@@ -525,7 +525,7 @@ func (dy *Dy) Search(tab string, params g.Map) (g.Map, error) {
 	}
 	req.Header.Add("Referer", "https://www.douyin.com/jingxuan/search/")
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
-	req.Header.Add("Cookie", dy.client.GetCookiesStr(dy.name))
+	req.Header.Add("Cookie", dy.client.GetCookiesStr())
 	response, err := dy.client.SendRequestByReq(req, dy.name)
 	if err != nil {
 		dy.log().Errorf(context.Background(), "Search SendRequestByReq error:%v", err.Error())

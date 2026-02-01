@@ -127,10 +127,10 @@ function getSigCount(e) {
     return e && (r++)
 }
 
-m = JSON.parse(args[0])
+m = JSON.parse(args[1])
 var a = O("".concat(m.x6).concat(m.x7).concat(m.x8))
 m.x9 = a
 f = m.x6 && m.x7 || ""
-m.x10 = args[1]
+m.x10 = args[2]
 m.x11 = 'normal'
 console.log(b64Encode(encodeUtf8(JSON.stringify(m))))

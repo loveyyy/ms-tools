@@ -161,7 +161,7 @@ function handleLoad () {
 
 function getList (isMore = false) {
   params.value.refresh_type = isMore ? 3 : 1
-  GetData(2, params.value).then((res => {
+  GetData(21, params.value).then((res => {
     if (res) {
       if (res.items) {
         params.value.cursor_score = res.cursor_score

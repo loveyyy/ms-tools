@@ -19,7 +19,7 @@
                     <n-col :span="6" v-for="(item, index) in videoList" :key="item.aweme_id || index"
                         style="cursor: pointer;" @click="openPlayer(item)">
                         <n-image width="100%" height="250px;width: 100%;" style="border-radius: 10px"
-                            :src="proxy(item.cover)" preview-disabled fit="contain" />
+                            :src="item.cover" preview-disabled fit="contain" />
                         <n-ellipsis class="note_title" style="width: 100%;text-align: start" line-clamp="2">
                             {{ item.desc || '无标题' }}
                         </n-ellipsis>

@@ -225,7 +225,7 @@ func (x *Xhs) profileData() string {
 		x.log().Errorf(context.Background(), "xhs gid.js 文件不存在")
 		return ""
 	}
-	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr("xhs"))
+	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr())
 	// 设置SysProcAttr属性，实现静默执行
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		HideWindow: true,
@@ -247,13 +247,13 @@ func (x *Xhs) xsCommon(e map[string]interface{}) string {
 	c := e["X-T"].(int64)
 	d := e["X-S"].(string)
 
-	h := "I38rHdgsjopgIvesdVwgIC+oIELmBZ5e3VwXLgFTIxS3bqwErFeexd0ekncAzMFYnqthIhJeD9MDKutRI3KsYorWHPtGrbV0P9WfIi/eWc6eYqtyQApPI37ekmR6QL+5Ii6sdneeSfqYHqwl2qt5B0DBIx+PGDi/sVtkIxdsxuwr4qtiIhuaIE3e3LV0I3VTIC7e0utl2ADmsLveDSKsSPw5IEvsiVtJOqw8BuwfPpdeTFWOIx4TIiu6ZPwrPut5IvlaLbgs3qtxIxes1VwHIkumIkIyejgsY/WTge7eSqte/D7sDcpipedeYrDtIC6eDVw2IENsSqtlnlSuNjVtIx5e1qt3bmAeVn8LIES/IhEe+AFDI3EPKI8BIiW7ZPwFIvGj4sesYINsxVwSIC7edB7e0fh+IEde6WrS8qwUIE7s1f0s6WAeiVtwpjgeWuw5IvEpz/eedPw5LfesWVw8IxI2I38isqwZgVtPzg8QwcNejd/eiqwoIhAsS/AskFRYIk/s0MvskdE0IhgsiVwDIhGdQqwJ8ut9I33e3PtVIiNsVVwxIENsfut9tPwJsqwFIvrUIxuL29uf2I/exPtlIhh4Ii0eDVwqrzErLj7sYjQ6IiLe4PtOmVwIIvve3utu+DNeTlAsVrMeIhos3oJs3PtnnuwaIvge0uwXIigeTAIeIveeSBoefqtIIxdsxuwU4eQtIED+Iv7sxINsxAgs0c7sdPwiIvHWIvIFcPwZICIRIhgsVL4lNjJsfqttIhprmqtWJZNsSbdeWVwerVwyIC8FIirPnVwryVtaICvedS7sxVtesPw/IiHHcuwxIv8Qzs4ZIE7e0agedjdsTut/qPwLIEleIvJe3uwXIkvs0IhIIxWJ/ShHIxPoIx0skqtXBuw4JqwDIxYxIkAe1nKsTuwrJmFF"
+	h := "I38rHdgsjopgIvesdVwgIC+oIELmBZ5e3VwXLgFTIxS3bqwErFeexd0ekncAzMFYnqthIhJeSfMDKutRI3KsYorWHPtGrbV0P9WfIi/eWc6eYqtyQApPI37ekmR6QL+5Ii6sdneeSfqYHqwl2qt5B0DBIx+PGDi/sVtkIxdsxuwr4qtiIhuaIE3e3LV0I3VTIC7e0utl2ADmsLveDSKsSPw5IEvsiVtJOqw8BuwfPpdeTFWOIx4TIiu6ZPwrPut5IvlaLbgs3qtxIxes1VwHIkumIkIyejgsY/WTge7eSqte/D7sDcpipedeYrDtIC6eDVw2IENsSqtlnlSuNjVtIvoekqt3cZ7sVo4gIESyIhE4QfquIxhnqz8gIkIfoqwkICZWG73sdlOeVPw3IvAe0fgedfR4Ii5s3Ib02utAIiKsidvekZNeTPt4nAOeWPwEIvS8zeoedPwvp9gsSVwrI3SrIxE5Luwwaqw+rekhZANe1MNe0Pw9ICNsVLoeSbIFIkosSr7sVnFiIkgsVVwHIvln/PtCcPwpIEos0uwQIv5e6uw5Ih3sjuw5NqwGoVwuICzTIvRtQeVAGl/siqtFIhPtIieeYuwoeWccpUOsDskuIhRytPwwzqwAIkesWqtuqIAsVF6s1IbLIE0s6edsiPtccPwrICJeWqwvIiNeT/VOICdeS9geSPtlIxvsVqwT2dT+IEGKIv5s6roex97ejD7sSqtoIkWMIxzhmqtoIvkjIk5sxbc3H//sjqtBIEbwZutWJZesSroeYuwseuw/IvEAIiuZ/Vw8GVt2IC7edM6sVPterVtqIiZwLPwkIv8oadF+IE/ed/7eY0OekVwwHPtzIiPcI3Ns6utCIE3edFTfICYyZlM2IvWGICgeYPw0/qt+QPtjIkrTIEAs1j/eSuwxpMDVICWrJPtLbutwI3rXIxQxIEMMIk/sTlNsTDSeJuwwI3S3rqtreuw2Ii6eTAlXIEbTeg0eWutZPqtvB/qtsDZHI3TknuwBI3gsV/YzIkE4sqwtIkEPwqt1HVtoIhu6ICzNIh89sqwNIiGhIvJe1PtvwcH6IEVOIv0sfnKsxuwAICTMIhIU/chFIv4AGYH7IvOsWS/e0qwwIk7s1W=="
 	g1 := "1"
 	listMap := gmap.NewListMap(true)
 	listMap.Set("s0", x.getPlatformCode(s))
 	listMap.Set("s1", "")
 	listMap.Set("x0", g1)
-	listMap.Set("x1", "4.2.6")
+	listMap.Set("x1", "4.3.1")
 	listMap.Set("x2", s)
 	listMap.Set("x3", e["xsecappid"].(string))
 	listMap.Set("x4", e["webBuild"].(string))
@@ -261,14 +261,14 @@ func (x *Xhs) xsCommon(e map[string]interface{}) string {
 	listMap.Set("x6", c)
 	listMap.Set("x7", d)
 	listMap.Set("x8", h)
-
 	jsonDataBytes, _ := json.Marshal(listMap)
+	log.Print(string(jsonDataBytes))
 	jsFilePath := utils.GetRootPath() + "/js/xhs/xscommon.js"
 	if !gfile.Exists(jsFilePath) {
 		x.log().Errorf(context.Background(), "xhs xscommon.js 文件不存在")
 		return ""
 	}
-	cmd := exec.Command("node", jsFilePath, string(jsonDataBytes), strconv.Itoa(x.signName+1))
+	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr(), string(jsonDataBytes), "0")
 	// 设置SysProcAttr属性，实现静默执行
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		HideWindow: true,
@@ -289,8 +289,8 @@ func (x *Xhs) xTS(u string, params string) *XSTruct {
 		x.log().Errorf(context.Background(), "xhs xs.js 文件不存在")
 		return nil
 	}
-	x.log().Infof(context.Background(), "XTS请求的URL为： %v,%v,%v,%v", u, params, jsFilePath, x.client.GetCookiesStr(x.name))
-	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr(x.name), u, params)
+	x.log().Infof(context.Background(), "XTS请求的URL为： %v,%v,%v,%v", u, params, jsFilePath, x.client.GetCookiesStr())
+	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr(), u, params)
 	// 设置SysProcAttr属性，实现静默执行
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		HideWindow: true,
@@ -311,17 +311,13 @@ func (x *Xhs) xTS(u string, params string) *XSTruct {
 }
 
 func (x *Xhs) xTS1(u string, params string) *XSTruct {
-	jsFilePath := utils.GetRootPath() + "/js/xhs/xs1.js"
+	jsFilePath := utils.GetRootPath() + "/js/xhs/xs2.js"
 	if !gfile.Exists(jsFilePath) {
 		x.log().Errorf(context.Background(), "xhs xs1.js 文件不存在")
 		return nil
 	}
-	x.log().Infof(context.Background(), "XTS请求的URL为： %v,%v,%v", u, params, jsFilePath)
-	var uParams = u + params
-	has := md5.Sum([]byte(uParams))
-	md5str := fmt.Sprintf("%x", has) //将[]byte转成16进制
-	log.Print(x.client.GetCookiesStr(x.name), uParams, md5str)
-	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr(x.name), uParams, md5str)
+	x.log().Infof(context.Background(), "XTS请求的URL为： %v,%v,%v,%v", x.client.GetCookiesStr(), u, params, jsFilePath)
+	cmd := exec.Command("node", jsFilePath, x.client.GetCookiesStr(), u, params)
 	// 设置SysProcAttr属性，实现静默执行
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		HideWindow: true,
@@ -334,10 +330,10 @@ func (x *Xhs) xTS1(u string, params string) *XSTruct {
 	nString := strings.ReplaceAll(string(output), "{}", "")
 	nString = strings.ReplaceAll(nString, "\n", "")
 	xs := &XSTruct{
-		XS: nString,
+		XS: strings.ReplaceAll(nString, "[Error]", ""),
 		XT: gtime.Now().UnixMilli(),
 	}
-	g.Log().Infof(context.Background(), "L返回的值为： %v,%v", xs.XT, xs.XS)
+	g.Log().Infof(context.Background(), "L返回的值为： %v,%v", xs.XT, strings.ReplaceAll(xs.XS, "[Error]", ""))
 	return xs
 }
 
@@ -346,7 +342,7 @@ func (x *Xhs) Init(isInit bool) {
 		x.Xsecappid = "xhs-pc-web"
 		x.client.AddCookies("xsecappid", x.Xsecappid)
 
-		x.WebBuild = "4.79.0"
+		x.WebBuild = "5.8.0"
 		x.client.AddCookies("webBuild", x.WebBuild)
 
 		e := "WINDOWS"
@@ -366,7 +362,7 @@ func (x *Xhs) Init(isInit bool) {
 		}
 		x.getGID(profileData)
 	} else {
-		cookiesMap, err := x.client.LoadCookieFromFile()
+		cookiesMap, err := x.client.LoadCookieFromFile(x.name)
 		if err == nil {
 			x.Xsecappid = cookiesMap["xsecappid"].(string)
 			x.WebBuild = cookiesMap["webBuild"].(string)
@@ -427,7 +423,7 @@ func (x *Xhs) login() {
 	request.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
 	request.Header.Add("Cache-Control", "no-cache")
 	request.Header.Add("Connection", "keep-alive")
-	request.Header.Add("Cookie", x.client.GetCookiesStr(""))
+	request.Header.Add("Cookie", x.client.GetCookiesStr())
 	response, err := x.client.SendRequestByReq(request, x.name)
 	if err != nil {
 		x.log().Errorf(context.Background(), "Login Send 异常:%v", err)
@@ -443,7 +439,7 @@ func (x *Xhs) getGID(profileData string) {
 	var params = g.Map{}
 	params["platform"] = "Windows"
 	params["profileData"] = profileData
-	params["sdkVersion"] = "4.2.6"
+	params["sdkVersion"] = "4.3.1"
 	params["svn"] = 2
 	jsonParams, err := json.Marshal(params)
 	if err != nil {
@@ -465,9 +461,6 @@ func (x *Xhs) getGID(profileData string) {
 	request.Header.Add("X-S", xsts.XS)
 	request.Header.Add("X-S-Common", strings.Trim(xsts.XCommon, "\n"))
 	request.Header.Add("X-T", strconv.FormatInt(xsts.XT, 10))
-	request.Header.Add("X-S", xsts.XS)
-	request.Header.Add("X-S-Common", strings.Trim(xsts.XCommon, "\n"))
-	request.Header.Add("X-T", strconv.FormatInt(xsts.XT, 10))
 	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
 	request.Header.Add("Accept", "application/json, text/plain, */*")
 	request.Header.Add("Content-Type", "application/json;charset=UTF-8")
@@ -475,7 +468,7 @@ func (x *Xhs) getGID(profileData string) {
 	request.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
 	request.Header.Add("Cache-Control", "no-cache")
 	request.Header.Add("Connection", "keep-alive")
-	request.Header.Add("Cookie", x.client.GetCookiesStr(""))
+	request.Header.Add("Cookie", x.client.GetCookiesStr())
 	response, err := x.client.SendRequestByReq(request, x.name)
 	if err != nil {
 		x.log().Errorf(context.Background(), "webprofile Send 异常:%v", err)
@@ -511,6 +504,7 @@ func (x *Xhs) homeFeed(params1 g.Map, isV2 bool) (g.Map, error) {
 		x.log().Errorf(context.Background(), "Marshal err %v", err.Error())
 		return nil, err
 	}
+
 	request, err := x.client.GetNewRequest("POST", u, strings.NewReader(string(jsonParams)))
 	if err != nil {
 		x.log().Errorf(context.Background(), "GetNewRequest err %v", err.Error())
@@ -527,9 +521,9 @@ func (x *Xhs) homeFeed(params1 g.Map, isV2 bool) (g.Map, error) {
 		x.log().Errorf(context.Background(), "HomeFeed XTS 异常")
 		return nil, err
 	}
-	request.Header.Add("X-S", xsts.XS)
+	request.Header.Add("X-s", xsts.XS)
 	request.Header.Add("X-S-Common", strings.Trim(xsts.XCommon, "\n"))
-	request.Header.Add("X-T", strconv.FormatInt(xsts.XT, 10))
+	request.Header.Add("X-t", strconv.FormatInt(xsts.XT, 10))
 	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
 	request.Header.Add("Accept", "application/json, text/plain, */*")
 	request.Header.Add("Content-Type", "application/json;charset=UTF-8")
@@ -537,7 +531,7 @@ func (x *Xhs) homeFeed(params1 g.Map, isV2 bool) (g.Map, error) {
 	request.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
 	request.Header.Add("Cache-Control", "no-cache")
 	request.Header.Add("Connection", "keep-alive")
-	request.Header.Add("Cookie", x.client.GetCookiesStr(""))
+	request.Header.Add("Cookie", x.client.GetCookiesStr())
 	result, err := x.client.SendRequestByReq(request, x.name)
 	if err != nil {
 		x.log().Errorf(context.Background(), "HomeFeed Send 异常:%v", err)
@@ -585,7 +579,7 @@ func (x *Xhs) feedDetail(params1 g.Map, isV2 bool) (g.Map, error) {
 	request.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
 	request.Header.Add("Cache-Control", "no-cache")
 	request.Header.Add("Connection", "keep-alive")
-	request.Header.Add("Cookie", x.client.GetCookiesStr(""))
+	request.Header.Add("Cookie", x.client.GetCookiesStr())
 	result, err := x.client.SendRequestByReq(request, x.name)
 	if err != nil {
 		x.log().Errorf(context.Background(), "feedDetail Send 异常:%v", err)
@@ -639,7 +633,7 @@ func (x *Xhs) search(params1 g.Map) (g.Map, error) {
 	request.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
 	request.Header.Add("Cache-Control", "no-cache")
 	request.Header.Add("Connection", "keep-alive")
-	request.Header.Add("Cookie", x.client.GetCookiesStr(""))
+	request.Header.Add("Cookie", x.client.GetCookiesStr())
 	result, err := x.client.SendRequestByReq(request, x.name)
 	if err != nil {
 		x.log().Errorf(context.Background(), "HomeFeed Send 异常:%v", err)
@@ -674,7 +668,7 @@ func (x *Xhs) userDetail(params g.Map) (g.Map, error) {
 	}
 	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
 	request.Header.Add("Referer", "https://www.xiaohongshu.com/explore")
-	request.Header.Add("Cookie", x.client.GetCookiesStr(""))
+	request.Header.Add("Cookie", x.client.GetCookiesStr())
 	result, err := x.client.SendRequestByReq(request, x.name)
 	if err != nil {
 		x.log().Errorf(context.Background(), "userDetail Send 异常:%v", err)
@@ -770,7 +764,7 @@ func (x *Xhs) userFeedList(params1 g.Map) (g.Map, error) {
 		return nil, err
 	}
 	request.Header.Add("X-S", xsts.XS)
-	request.Header.Add("X-S-Common", strings.Trim(xsts.XCommon, "\n"))
+	request.Header.Add("X-S-Common", xsts.XCommon)
 	request.Header.Add("X-T", strconv.FormatInt(xsts.XT, 10))
 	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0")
 	request.Header.Add("Accept", "application/json, text/plain, */*")
@@ -779,7 +773,7 @@ func (x *Xhs) userFeedList(params1 g.Map) (g.Map, error) {
 	request.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
 	request.Header.Add("Cache-Control", "no-cache")
 	request.Header.Add("Connection", "keep-alive")
-	request.Header.Add("Cookie", x.client.GetCookiesStr(""))
+	request.Header.Add("Cookie", x.client.GetCookiesStr())
 	result, err := x.client.SendRequestByReq(request, x.name)
 	if err != nil {
 		x.log().Errorf(context.Background(), "userFeedList Send 异常:%v", err)
